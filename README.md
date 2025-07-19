@@ -1,17 +1,31 @@
-# IB Cronjob Trading Bot 🐍📈
+# Stock Trading Bot
 
-使用 Interactive Brokers + Python + ib_insync 建立的自動化定期交易機器人。
+A simple stock trading bot using IB API.
 
-## 🔧 功能
-- 連線到 IB Gateway (支援 Paper Trading)
-- 查詢帳戶現金餘額與部位
-- 預留模組化交易邏輯（定期賣出 / 買入）
+## Features
 
-## 📦 安裝步驟
+* Sell stocks using IB API
+* Automatic trading based on predefined rules
 
+## Installation
+1. Download IB TWS/Gateway
+https://www.interactivebrokers.com/en/trading/ibgateway-latest.php
+
+2. Clone and setup project
 ```bash
-git clone https://github.com/yourname/ib-cron-bot.git
-cd ib-cron-bot/
+git clone https://github.com/pig6485/IB-Trade-Job.git
+cd bot/
 python3 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
+```
+
+3. Create a new file named `.env` and add your MAILGUN credentials:
+MAILGUN_API_KEY=xxx
+MAILGUN_DOMAIN=xxx
+MAILGUN_RECIPIENT=xxx
+
+4. Run app
+```bash
+python -m bot.main
+```

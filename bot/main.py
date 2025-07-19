@@ -1,10 +1,9 @@
+from . import config
 from .notification_service import send_email
 from .ib_client import IBClient
 from .scheduler import should_run_today
-from dotenv import load_dotenv
 
 def main():
-    load_dotenv()
     if not should_run_today():
         print("⏰ Not time to run trading logic today.")
         return
@@ -18,12 +17,13 @@ def main():
         print(f"\n💵 Cash available was: {before_cash:.2f} USD")
 
         # sell stock
-        ok, message = client.sell_stock("SGOV", 500, 450)
+        ok, message, sell_amount = client.sell_stock("SGOV", config.NEED_AMOUMT, before_cash)
 
         # after manipulate
-        after_cash = client.get_cash_balance()
+        after_cash = before_cash - sell_amount
         print(f"\n💵 Cash available is: {after_cash:.2f} USD")
         account_summary = client.print_account_summary()
+        print(account_summary)
 
         # send mail
         subject = "IB Cron Bot Trading Report"
@@ -31,7 +31,7 @@ def main():
         if not ok:
             sellResultText = "Sell stock failed: " + message
         text_content = sellResultText + f"\nBefore cash: {before_cash:.2f} USD\nAfter cash: {after_cash:.2f} USD\nAccount Summary:\n{account_summary}"
-        # send_email(subject, text_content)
+        send_email(subject, text_content)
 
     finally:
         client.disconnect()

@@ -92,16 +92,18 @@ class IBClient:
                 # Log the transaction
                 print(f"SOLD {shares_to_sell} shares of {symbol}")
 
+                sell_amount = current_price_per_share * shares_to_sell
+
                 return True, ""
             else:
                 print("There is no need to sell stock")
-                return False, "You still have enough cash to buy stock, there is no need to sell stock"
+                return False, "You still have enough cash to buy stock, there is no need to sell stock", 0
 
         except Exception as e:
             # Send an email notification with the error message
             print(f"Error selling {symbol}: {str(e)}\n{traceback.format_exc()}")
 
-            return False, str(e)
+            return False, str(e), sell_amount
 
 
     def calculate_shares_to_sell(self, amount_to_sell: float, current_share_price: float) -> int:

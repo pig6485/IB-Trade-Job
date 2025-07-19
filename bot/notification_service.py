@@ -1,10 +1,11 @@
 import requests
-import os
+from . import config
 
 def send_email(subject, text_content, html_content=None):
-    MAILGUN_API_KEY = os.environ.get('MAILGUN_API_KEY')
-    MAILGUN_DOMAIN = os.environ.get('MAILGUN_DOMAIN')
-    MAILGUN_RECIPIENT = os.environ.get('MAILGUN_RECIPIENT')
+    MAILGUN_API_KEY = config.MAILGUN_API_KEY
+    MAILGUN_DOMAIN = config.MAILGUN_DOMAIN
+    MAILGUN_RECIPIENT = config.MAILGUN_RECIPIENT
+    
     if not MAILGUN_API_KEY or not MAILGUN_DOMAIN:
         print("❌ Error: MAILGUN_API_KEY and MAILGUN_DOMAIN environment variables must be set to enable email service.")
         return False

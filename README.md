@@ -14,7 +14,7 @@ https://www.interactivebrokers.com/en/trading/ibgateway-latest.php
 2. Clone and setup project
 ```bash
 git clone https://github.com/pig6485/IB-Trade-Job.git
-cd bot/
+cd IB-Trade-Job/
 python3 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt

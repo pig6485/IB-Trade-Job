@@ -2,24 +2,27 @@ import math
 import traceback
 from ib_insync import IB, Contract, Order, Stock
 from . import config
+from .logger_config import get_logger
+
+logger = get_logger(__name__)
 
 class IBClient:
     def __init__(self):
         self.ib = IB()
 
     def connect(self):
-        print(f"Connecting to IB at {config.IB_HOST}:{config.IB_PORT}...")
+        logger.info(f"Connecting to IB at {config.IB_HOST}:{config.IB_PORT}...")
         self.ib.connect(config.IB_HOST, config.IB_PORT, clientId=config.IB_CLIENT_ID)
         # IMPROTANT: This mean that we use delayed market data
         self.ib.reqMarketDataType(3)
-        print("✅ Connected to IB Gateway")
+        logger.info("✅ Connected to IB Gateway")
         self.ib.reqAccountSummary()
         self.ib.sleep(1)
 
     def disconnect(self):
         if self.ib.isConnected():
             self.ib.disconnect()
-            print("Disconnected from IB TWS/Gateway.")
+            logger.info("Disconnected from IB TWS/Gateway.")
 
     def print_account_summary(self):
         """
@@ -74,7 +77,7 @@ class IBClient:
                 # Get current market value and number of shares
                 current_price_per_share, num_shares, total_market_value = self.get_stock_info(symbol)
 
-                print(f"You have {total_market_value} in market value and {num_shares} shares of {symbol}")
+                logger.info(f"You have {total_market_value} in market value and {num_shares} shares of {symbol}")
 
                 # Calculate number of shares to sell
                 still_need = amount - account_cash
@@ -90,18 +93,18 @@ class IBClient:
                 self.place_order(order, contract)
 
                 # Log the transaction
-                print(f"SOLD {shares_to_sell} shares of {symbol}")
+                logger.info(f"SOLD {shares_to_sell} shares of {symbol}")
 
                 sell_amount = current_price_per_share * shares_to_sell
 
                 return True, ""
             else:
-                print("There is no need to sell stock")
+                logger.info("There is no need to sell stock")
                 return False, "You still have enough cash to buy stock, there is no need to sell stock", 0
 
         except Exception as e:
             # Send an email notification with the error message
-            print(f"Error selling {symbol}: {str(e)}\n{traceback.format_exc()}")
+            logger.info(f"Error selling {symbol}: {str(e)}\n{traceback.format_exc()}")
 
             return False, str(e), sell_amount
 
@@ -166,11 +169,11 @@ class IBClient:
 
         # Check the order status
         if trade.orderStatus.status == "Filled":
-            print(f"Order filled at {trade.orderStatus.avgFillPrice:.2f}")
+            logger.info(f"Order filled at {trade.orderStatus.avgFillPrice:.2f}")
         elif trade.orderStatus.status in ["PreSubmitted", "Submitted"]:
-            print("Order submitted but not yet filled.")
+            logger.info("Order submitted but not yet filled.")
         else:
-            print(f"Order failed or rejected: {trade.orderStatus.status}, {trade.orderStatus.whyHeld}")
+            logger.info(f"Order failed or rejected: {trade.orderStatus.status}, {trade.orderStatus.whyHeld}")
     
     def get_market_price(self, symbol: str) -> float:
         """
@@ -217,5 +220,5 @@ class IBClient:
         if math.isnan(price_per_share):
             price_per_share = 0.0  # Or another reasonable default value
 
-        print(f"DEBUG: {symbol} - Price per Share: {price_per_share}, Share Count: {share_count}, Total Market Value: {market_value_total}")
+        logger.info(f"DEBUG: {symbol} - Price per Share: {price_per_share}, Share Count: {share_count}, Total Market Value: {market_value_total}")
         return price_per_share, share_count, market_value_total

@@ -1,5 +1,8 @@
 import os
 from dotenv import load_dotenv
+from .logger_config import get_logger
+
+logger = get_logger(__name__)
 
 load_dotenv()
 
@@ -11,10 +14,10 @@ MAILGUN_DOMAIN = os.environ.get("MAILGUN_DOMAIN")
 MAILGUN_RECIPIENT = os.environ.get('MAILGUN_RECIPIENT')
 NEED_AMOUMT = os.environ.get('NEED_AMOUMT', 5000)
 
-print(f"IB_HOST: {IB_HOST}")
-print(f"IB_PORT: {IB_PORT}")
-print(f"IB_CLIENT_ID: {IB_CLIENT_ID}")
-print(f"MAILGUN_API_KEY: {MAILGUN_API_KEY}")
-print(f"MAILGUN_DOMAIN: {MAILGUN_DOMAIN}")
-print(f"MAILGUN_RECIPIENT: {MAILGUN_RECIPIENT}")
-print(f"NEED_AMOUMT: {NEED_AMOUMT}")
+logger.info(f"IB_HOST: {IB_HOST}")
+logger.info(f"IB_PORT: {IB_PORT}")
+logger.info(f"IB_CLIENT_ID: {IB_CLIENT_ID}")
+logger.info(f"MAILGUN_API_KEY: {MAILGUN_API_KEY}")
+logger.info(f"MAILGUN_DOMAIN: {MAILGUN_DOMAIN}")
+logger.info(f"MAILGUN_RECIPIENT: {MAILGUN_RECIPIENT}")
+logger.info(f"NEED_AMOUMT: {NEED_AMOUMT}")
